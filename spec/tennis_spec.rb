@@ -4,7 +4,9 @@ require 'rspec'
 require_relative '../tennis'
 
 describe Tennis::Game do
-  let(:game) { Tennis::Game.new }
+  let(:john) { Tennis::Player.new('john')}
+  let(:emma) { Tennis::Player.new('emma')}
+  let(:game) { Tennis::Game.new(john, emma) }
 
   describe '.initialize' do
     it 'creates two players' do
@@ -25,12 +27,37 @@ describe Tennis::Game do
       expect(game.player1.points).to eq(1)
     end
   end
+
+  describe '#wins_game' do
+    it 'adds the game to the @games array of the winning player' do
+      game.wins_game(game.player1)
+
+      expect(game.player1.games.length).to eq(1)
+    end
+  end
+
+  describe '#wins_set' do
+    it 'increments the @sets count of the player' do
+      game.wins_set(game.player1)
+
+      expect(game.player1.sets).to eq(1)
+    end
+  end
+
+  describe '#wins_match' do
+    it 'increments the @match count of the player' do
+      game.wins_match(game.player1)
+
+      expect(game.player1.matches).to eq(1)
+    end
+  end
+
 end
 
 describe Tennis::Player do
   let(:player) do
-    player = Tennis::Player.new
-    player.opponent = Tennis::Player.new
+    player = Tennis::Player.new('john')
+    player.opponent = Tennis::Player.new('emma')
 
     return player
   end
@@ -73,15 +100,6 @@ describe Tennis::Player do
     end
     
     context 'when points is 3' do
-      
-      context 'and opponent points < 3' do
-        it 'returns forty' do
-          player.points = 3
-          player.opponent.points = 2
-
-          expect(player.score).to eq('forty')
-        end
-      end
 
       context 'and opponent points == 3' do
         it 'returns deuce' do
@@ -89,6 +107,15 @@ describe Tennis::Player do
           player.opponent.points = 3
 
           expect(player.score).to eq('deuce')
+        end
+      end
+
+      context 'and opponent points < 3' do
+        it 'returns forty' do
+          player.points = 3
+          player.opponent.points = 2
+
+          expect(player.score).to eq('forty')
         end
       end
 
