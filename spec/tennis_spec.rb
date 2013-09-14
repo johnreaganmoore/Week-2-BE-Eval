@@ -21,10 +21,22 @@ describe Tennis::Game do
   end
 
   describe '#wins_ball' do
-    it 'increments the points of the winning player' do
-      game.wins_ball(game.player1)
+    context 'but has not yet won the game' do
+      it 'increments the points of the winning player' do
+        game.wins_ball(game.player1)
 
-      expect(game.player1.points).to eq(1)
+        expect(game.player1.points).to eq(1)
+      end
+    end
+
+    context 'and wins the game' do
+      it 'increments the points of the winning player and adds game to players @games array' do
+        game.player1.points = 2
+        game.wins_ball(game.player1)
+
+        expect(game.player1.points).to eq(3)
+        expect(game.player1.games.length).to eq(1)
+      end
     end
   end
 
@@ -51,7 +63,6 @@ describe Tennis::Game do
       expect(game.player1.matches).to eq(1)
     end
   end
-
 end
 
 describe Tennis::Player do

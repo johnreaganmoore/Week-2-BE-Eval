@@ -13,6 +13,9 @@ module Tennis
 
     def wins_ball(player)
       player.record_won_ball!
+      if player.won_game?
+        wins_game(player)
+      end
     end
 
     def wins_game(player)
@@ -80,6 +83,11 @@ module Tennis
         end
       end        
     end
+
+    #determines if the player has won the game
+    def won_game?
+      @points > @opponent.points + 1 && @points >= 3
+    end
     
     private
 
@@ -98,9 +106,5 @@ module Tennis
       @points + 1 == @opponent.points
     end
 
-    #determines if the player has won the game
-    def won_game?
-      @points > @opponent.points + 1 && @points >= 3
-    end
   end
 end
