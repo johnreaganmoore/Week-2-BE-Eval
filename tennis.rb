@@ -1,14 +1,37 @@
 module Tennis
+  
+  class Match
+
+  end
+
+  class Set
+
+  end
+
   class Game
+    #Class Variables
+    @@total_games = 0
+
+
     attr_accessor :player1, :player2
 
-    def initialize(player1, player2)
+    def initialize(player1, player2, name)
       @player1 = player1
       @player2 = player2
 
       @player1.opponent = @player2
       @player2.opponent = @player1
 
+      @name = name
+      
+    end
+
+    def total_games
+      @@total_games
+    end
+
+    def set_total_games(input)
+      @@total_games = input
     end
 
     def wins_ball(player)
@@ -20,25 +43,41 @@ module Tennis
 
     def wins_game(player)
       player.games << self
+      player.games_count += 1
+      if won_match?(player)
+        player.record_won_set!
+        player.record_won_match!   
+      elsif won_set?(player)
+        player.record_won_set!
+        new_game
+      else
+        new_game
+      end
     end
 
-    def wins_set(player)
-      player.sets += 1
+    def new_game
+      @@total_games += 1
+      Game.new(@player1, @player2, "game#{@@total_games}")
     end
 
-    def wins_match(player)
-      player.matches += 1
+    def won_set?(player)
+      player.games_count >= 3
+    end
+
+    def won_match?(player)
+      player.sets > 2
     end
 
   end
 
   class Player
-    attr_accessor :points, :opponent, :games, :sets, :matches
+    attr_accessor :points, :opponent, :games, :sets, :matches, :games_count
 
     def initialize(name)
       @name = name
       @points = 0     #counts the number of points the player has won in a game
       @games = []     #An array of games
+      @games_count = 0
       @sets = 0       #Counts the number of sets a player has won
       @matches = 0      #Count of the matches the player has won
       @opponent = self.opponent
@@ -50,6 +89,16 @@ module Tennis
     # Returns the integer new score.
     def record_won_ball!
       @points += 1
+    end
+
+    def record_won_set!
+      @sets += 1
+      @games_count = 0
+    end
+
+    def record_won_match!
+      @matches += 1
+      @sets = 0
     end
 
     # Returns the String score for the player.
