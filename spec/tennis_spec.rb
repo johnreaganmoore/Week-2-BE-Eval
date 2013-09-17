@@ -69,13 +69,14 @@ describe Tennis::Game do
       end
 
       context 'and the last set of the match' do
-        it 'increments the match count of the winning player' 
+        it 'increments the match count of the winning player' do
           game.player1.sets = 3
           game.wins_game(game.player1)
 
           expect(game.player1.sets).to eq(0)
           expect(game.player1.games_count).to eq(0)
-          expect(game.player1.matches).to eq(1)      
+          expect(game.player1.matches).to eq(1)  
+        end    
       end
     end
   end
